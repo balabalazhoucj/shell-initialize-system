@@ -48,16 +48,17 @@ echo "zhoucj  ALL=(ALL)       ALL" >> /etc/sudoers
 
 echo "alias vi='vim'" >> /etc/profile
 echo "alias grep='grep --colour'" >> /etc/profile
+
+#定义命令行提示符，能够显示当前目录，并且输入命令的地方单独一行
+export PS1='\n\e[1;37m[\e[m\e[1;32m\u\e[m\e[1;33m@\e[m\e[1;35m\H\e[m \e[4m`pwd`\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$'
+
+#定义编辑器格式
 cat > .vimrc <<EOF
 set ts=4
-set shiftwidth=4
+#set shiftwidth=4
 set fencs=utf-8
 set t_Co=256
 syntax on
 EOF
 
-mkdir tools
-cd tools
 
-
- url=$($mysqlcmd "select REPLACE(ConvertFilePath,'\"\\\"','\"\/\"') as ConvertFilePath from courseware.File where Filename='80后90后员工的干法01.mp4';")
