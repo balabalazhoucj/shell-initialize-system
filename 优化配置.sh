@@ -1,64 +1,62 @@
 echo "nameserver 221.228.255.1" > /etc/resolv.conf
-#¸ü¸ÄÔ´
+#æ›´æ”¹æº
 yum install wget -y
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
 cd /etc/yum.repos.d
 wget http://mirrors.163.com/.help/CentOS6-Base-163.repo
 mv CentOS6-Base-163.repo CentOS-Base.repo
-#°²×°epelÔ´
+#å®‰è£…epelæº
 rpm -Uvh http://ftp.sjtu.edu.cn/fedora/epel/6/i386/epel-release-6-8.noarch.rpm
 #wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-6.repo
 
-#°²×°Èí¼þ
+#å®‰è£…è½¯ä»¶
 yum install lrzsz gcc sysstat ntp openssh-clients lsof man tree parted vim -y
 yum groupinstall "Development tools" -y
 
-#½ûÓÃselinux
+#ç¦ç”¨selinux
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
 
-#Ê±¼äÍ¬²½
+#æ—¶é—´åŒæ­¥
 echo '*/5 * * * * /usr/sbin/ntpdate time.windows.com > /dev/null 2>&1' >> /var/spool/cron/root
 
-#µ÷ÕûÎÄ¼þÃèÊö·û´óÐ¡
+#è°ƒæ•´æ–‡ä»¶æè¿°ç¬¦å¤§å°
 echo '*       -       nofile  65536' >> /etc/security/limits.conf
 
-#½ûÓÃIPV6
+#ç¦ç”¨IPV6
 echo -ne "alias net-pf-10 off\noptions ipv6 disable=1" > /etc/modprobe.d/ipv6off.conf
 
-#½â¾önfsÆô¶¯¹ý³ÌÖÐ·ÃÎÊipv6
+#è§£å†³nfså¯åŠ¨è¿‡ç¨‹ä¸­è®¿é—®ipv6
 if [ `awk '{print $3}' /etc/redhat-release` = 6.5 ];then
-	sed -i "s/udp6/#udp6/" /etc/netconfig
-	sed -i "s/tcp6/#tcp6/" /etc/netconfig
-fi
+			sed -i "s/udp6/#udp6/" /etc/netconfig
+				sed -i "s/tcp6/#tcp6/" /etc/netconfig
+		fi
 
-#¾«¼ò¿ª»ú×Ô¶¯Æô¶¯Ïî
-for a in `chkconfig --list | grep 3:on|awk '{print $1}'`;do chkconfig --level 3 $a off;done
-for a in crond network rsyslog sshd sysstat;do chkconfig --level 3 $a on;done 
+		#ç²¾ç®€å¼€æœºè‡ªåŠ¨å¯åŠ¨é¡¹
+		for a in `chkconfig --list | grep 3:on|awk '{print $1}'`;do chkconfig --level 3 $a off;done
+		for a in crond network rsyslog sshd sysstat;do chkconfig --level 3 $a on;done 
 
-#modprobe bridge
+		#modprobe bridge
 
-#È¥³ý¿ª»úµÇÂ¼ÐÅÏ¢
-#>/etc/redhat-release
->/etc/issue
+		#åŽ»é™¤å¼€æœºç™»å½•ä¿¡æ¯
+		#>/etc/redhat-release
+		>/etc/issue
 
-#Ìí¼ÓÆÕÍ¨ÓÃ»§²¢½øÐÐsudoÊÚÈ¨¹ÜÀí
-useradd zhoucj
-echo "123456"|passwd --stdin zhoucj&&history ¨Cc
-echo "zhoucj  ALL=(ALL)       ALL" >> /etc/sudoers
+		#æ·»åŠ æ™®é€šç”¨æˆ·å¹¶è¿›è¡ŒsudoæŽˆæƒç®¡ç†
+		useradd zhoucj
+		echo "123456"|passwd --stdin zhoucj&&history â€“c
+		echo "zhoucj  ALL=(ALL)       ALL" >> /etc/sudoers
 
-echo "alias vi='vim'" >> /etc/profile
-echo "alias grep='grep --colour'" >> /etc/profile
+		echo "alias vi='vim'" >> /etc/profile
+		echo "alias grep='grep --colour'" >> /etc/profile
 
-#¶¨ÒåÃüÁîÐÐÌáÊ¾·û£¬ÄÜ¹»ÏÔÊ¾µ±Ç°Ä¿Â¼£¬²¢ÇÒÊäÈëÃüÁîµÄµØ·½µ¥¶ÀÒ»ÐÐ
-export PS1='\n\e[1;37m[\e[m\e[1;32m\u\e[m\e[1;33m@\e[m\e[1;35m\H\e[m \e[4m`pwd`\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$'
+		#å®šä¹‰å‘½ä»¤è¡Œæç¤ºç¬¦ï¼Œèƒ½å¤Ÿæ˜¾ç¤ºå½“å‰ç›®å½•ï¼Œå¹¶ä¸”è¾“å…¥å‘½ä»¤çš„åœ°æ–¹å•ç‹¬ä¸€è¡Œ
+		export PS1='\n\e[1;37m[\e[m\e[1;32m\u\e[m\e[1;33m@\e[m\e[1;35m\H\e[m \e[4m`pwd`\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$'
 
-#¶¨Òå±à¼­Æ÷¸ñÊ½
-cat > .vimrc <<EOF
-set ts=4
-#set shiftwidth=4
-set fencs=utf-8
-set t_Co=256
-syntax on
-EOF
-
-
+		#å®šä¹‰ç¼–è¾‘å™¨æ ¼å¼
+		cat > .vimrc <<EOF
+		set ts=4
+		#set shiftwidth=4
+		set fencs=utf-8
+		set t_Co=256
+		syntax on
+		EOF
